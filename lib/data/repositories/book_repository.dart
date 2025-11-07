@@ -1,22 +1,19 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import '../models/book_model.dart';
 
 class BookRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   // CREATE: Add a new book
   Future<void> addBook(BookModel book, File? imageFile) async {
     try {
       String imageUrl = '';
 
-      // Upload image if provided
+      // Use placeholder image instead of Firebase Storage
       if (imageFile != null) {
-        final ref = _storage.ref().child('books/${book.id}.jpg');
-        await ref.putFile(imageFile);
-        imageUrl = await ref.getDownloadURL();
+        imageUrl =
+            'https://via.placeholder.com/400x600/4CAF50/FFFFFF?text=${Uri.encodeComponent(book.title)}';
       }
 
       final bookWithImage = book.copyWith(imageUrl: imageUrl);
@@ -61,11 +58,10 @@ class BookRepository {
     try {
       String imageUrl = book.imageUrl;
 
-      // Upload new image if provided
+      // Use placeholder if new image provided
       if (newImageFile != null) {
-        final ref = _storage.ref().child('books/${book.id}.jpg');
-        await ref.putFile(newImageFile);
-        imageUrl = await ref.getDownloadURL();
+        imageUrl =
+            'https://via.placeholder.com/400x600/2196F3/FFFFFF?text=${Uri.encodeComponent(book.title)}';
       }
 
       final updatedBook = book.copyWith(imageUrl: imageUrl);
@@ -82,13 +78,6 @@ class BookRepository {
   Future<void> deleteBook(String bookId) async {
     try {
       await _firestore.collection('books').doc(bookId).delete();
-
-      // Delete image from storage
-      try {
-        await _storage.ref().child('books/$bookId.jpg').delete();
-      } catch (e) {
-        // Image might not exist, continue
-      }
     } catch (e) {
       throw Exception('Failed to delete book: $e');
     }
