@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../logic/blocs/auth_bloc.dart';
+import '../../../logic/blocs/auth_event.dart';
 import '../../../logic/blocs/auth_state.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -51,9 +52,9 @@ class _SignupScreenState extends State<SignupScreen> {
             Navigator.pop(context);
           }
           if (state is AuthError) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
           }
         },
         child: SafeArea(

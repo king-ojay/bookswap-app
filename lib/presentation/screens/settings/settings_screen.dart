@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../logic/blocs/auth_bloc.dart';
+import '../../../logic/blocs/auth_event.dart';
 import '../../../logic/blocs/auth_state.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -40,10 +41,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-        elevation: 0,
-      ),
+      appBar: AppBar(title: const Text('Settings'), elevation: 0),
       body: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
           if (state is! AuthAuthenticated) {
@@ -54,7 +52,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
           return ListView(
             children: [
-              // Profile Section
               Container(
                 padding: const EdgeInsets.all(24),
                 color: Colors.blue.withOpacity(0.1),
@@ -73,37 +70,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Text(
-                      user.displayName,
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    Text(user.displayName,
+                        style: const TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 4),
-                    Text(
-                      user.email,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
-                      ),
-                    ),
+                    Text(user.email,
+                        style:
+                            const TextStyle(color: Colors.grey, fontSize: 14)),
                   ],
                 ),
               ),
-
               const SizedBox(height: 24),
-
-              // Notifications Section
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
                   'Notifications',
                   style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey),
                 ),
               ),
               SwitchListTile(
@@ -111,9 +96,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 subtitle: const Text('Receive notifications about swap offers'),
                 value: _notificationsEnabled,
                 onChanged: (value) {
-                  setState(() {
-                    _notificationsEnabled = value;
-                  });
+                  setState(() => _notificationsEnabled = value);
                 },
               ),
               SwitchListTile(
@@ -121,57 +104,45 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 subtitle: const Text('Receive email updates'),
                 value: _emailNotifications,
                 onChanged: (value) {
-                  setState(() {
-                    _emailNotifications = value;
-                  });
+                  setState(() => _emailNotifications = value);
                 },
               ),
-
               const Divider(height: 32),
-
-              // Account Section
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
                   'Account',
                   style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey),
                 ),
               ),
               ListTile(
                 leading: const Icon(Icons.info_outline),
                 title: const Text('About'),
                 subtitle: const Text('BookSwap v1.0.0'),
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('About BookSwap'),
-                      content: const Text(
-                        'BookSwap is a platform for students to exchange textbooks with each other.\n\nVersion 1.0.0',
+                onTap: () => showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('About BookSwap'),
+                    content: const Text(
+                        'BookSwap is a platform for students to exchange textbooks.\n\nVersion 1.0.0'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('OK'),
                       ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('OK'),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                    ],
+                  ),
+                ),
               ),
               ListTile(
                 leading: const Icon(Icons.logout, color: Colors.red),
-                title: const Text(
-                  'Sign Out',
-                  style: TextStyle(color: Colors.red),
-                ),
+                title:
+                    const Text('Sign Out', style: TextStyle(color: Colors.red)),
                 onTap: _signOut,
               ),
-
               const SizedBox(height: 24),
             ],
           );
