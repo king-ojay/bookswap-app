@@ -1,3 +1,4 @@
+// lib/data/repositories/auth_repository.dart
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
@@ -9,7 +10,7 @@ class AuthRepository {
   User? get currentUser => _auth.currentUser;
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
-  // Sign Up
+  // Sign Up: creates Firebase user, sends verification email and writes Firestore profile
   Future<UserModel?> signUp({
     required String email,
     required String password,
@@ -21,26 +22,33 @@ class AuthRepository {
         password: password,
       );
 
-      // Send email verification
-      await credential.user?.sendEmailVerification();
+      final user = credential.user;
+      if (user == null) return null;
+
+      // Send verification email
+      await user.sendEmailVerification();
 
       // Create user document in Firestore
-      final user = UserModel(
-        id: credential.user!.uid,
+      final newUser = UserModel(
+        id: user.uid,
         email: email,
         displayName: displayName,
         createdAt: DateTime.now(),
       );
 
-      await _firestore.collection('users').doc(user.id).set(user.toMap());
+      await _firestore.collection('users').doc(user.uid).set(newUser.toMap());
 
-      return user;
+      // Optional: keep user signed in or sign out depending on your flow.
+      // We return the created user profile to the caller.
+      return newUser;
+    } on FirebaseAuthException catch (e) {
+      throw Exception('Firebase Auth error: ${e.message}');
     } catch (e) {
       throw Exception('Sign up failed: $e');
     }
   }
 
-  // Sign In
+  // Sign In: checks verification and returns Firestore user data
   Future<UserModel?> signIn({
     required String email,
     required String password,
@@ -51,21 +59,29 @@ class AuthRepository {
         password: password,
       );
 
-      // Check email verification
-      if (credential.user?.emailVerified == false) {
-        throw Exception('Please verify your email before signing in');
+      final user = credential.user;
+      if (user == null) throw Exception('User not found');
+
+      // Ensure we have latest emailVerified status
+      await user.reload();
+      final reloaded = _auth.currentUser;
+      if (reloaded == null) throw Exception('User session error');
+
+      if (!reloaded.emailVerified) {
+        // Sign the user out immediately and ask verification
+        await _auth.signOut();
+        throw Exception('Please verify your email before signing in.');
       }
 
-      // Get user data from Firestore
-      final doc = await _firestore
-          .collection('users')
-          .doc(credential.user!.uid)
-          .get();
+      // Fetch Firestore profile
+      final doc = await _firestore.collection('users').doc(user.uid).get();
       if (doc.exists) {
         return UserModel.fromMap(doc.data()!);
       }
 
       return null;
+    } on FirebaseAuthException catch (e) {
+      throw Exception('Firebase Auth error: ${e.message}');
     } catch (e) {
       throw Exception('Sign in failed: $e');
     }
@@ -76,24 +92,25 @@ class AuthRepository {
     await _auth.signOut();
   }
 
-  // Get current user data
+  // Get current user data (from Firestore)
   Future<UserModel?> getCurrentUserData() async {
     try {
-      final userId = currentUser?.uid;
-      if (userId == null) return null;
-
-      final doc = await _firestore.collection('users').doc(userId).get();
-      if (doc.exists) {
-        return UserModel.fromMap(doc.data()!);
-      }
+      final user = _auth.currentUser;
+      if (user == null) return null;
+      final doc = await _firestore.collection('users').doc(user.uid).get();
+      if (doc.exists) return UserModel.fromMap(doc.data()!);
       return null;
     } catch (e) {
       throw Exception('Failed to get user data: $e');
     }
   }
 
-  // Resend verification email
+  // Resend verification email to currently signed-in user
   Future<void> resendVerificationEmail() async {
-    await currentUser?.sendEmailVerification();
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw Exception('No signed-in user to send verification to.');
+    }
+    await user.sendEmailVerification();
   }
 }

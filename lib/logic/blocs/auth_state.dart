@@ -1,3 +1,4 @@
+// lib/logic/blocs/auth_state.dart
 import 'package:equatable/equatable.dart';
 import '../../data/models/user_model.dart';
 
@@ -6,13 +7,10 @@ abstract class AuthState extends Equatable {
   List<Object?> get props => [];
 }
 
-// Initial state
 class AuthInitial extends AuthState {}
 
-// Loading state
 class AuthLoading extends AuthState {}
 
-// Authenticated state
 class AuthAuthenticated extends AuthState {
   final UserModel user;
 
@@ -22,10 +20,8 @@ class AuthAuthenticated extends AuthState {
   List<Object?> get props => [user];
 }
 
-// Unauthenticated state
 class AuthUnauthenticated extends AuthState {}
 
-// Error state
 class AuthError extends AuthState {
   final String message;
 

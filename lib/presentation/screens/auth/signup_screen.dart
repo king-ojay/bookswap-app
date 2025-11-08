@@ -1,3 +1,4 @@
+// lib/presentation/screens/auth/signup_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../logic/blocs/auth_bloc.dart';
@@ -43,18 +44,19 @@ class _SignupScreenState extends State<SignupScreen> {
       appBar: AppBar(title: const Text('Sign Up')),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is AuthAuthenticated) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Account created! Please verify your email.'),
-              ),
-            );
-            Navigator.pop(context);
-          }
           if (state is AuthError) {
+            // We use AuthError to show verification message too.
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message)),
             );
+            // If it's the verification message, we can pop back to login to let user check email.
+            if (state.message.toLowerCase().contains('verification')) {
+              Navigator.pop(context);
+            }
+          }
+          if (state is AuthAuthenticated) {
+            // If the flow ever directly authenticates, pop to home.
+            Navigator.pop(context);
           }
         },
         child: SafeArea(

@@ -38,6 +38,16 @@ class ChatRepository {
 
   // Send a message
   Future<void> sendMessage(MessageModel message) async {
+    await FirebaseFirestore.instance
+        .collection('chats')
+        .doc(message.chatId)
+        .collection('messages')
+        .add({
+      'senderId': message.senderId,
+      'senderName': message.senderName,
+      'text': message.text,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
     try {
       // Add message to subcollection
       await _firestore

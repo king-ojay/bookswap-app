@@ -1,3 +1,4 @@
+// lib/logic/blocs/auth_bloc.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/repositories/auth_repository.dart';
 import 'auth_event.dart';
@@ -31,8 +32,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           password: event.password,
           displayName: event.displayName,
         );
+
         if (user != null) {
-          emit(AuthAuthenticated(user));
+          // signUp already sent verification email.
+          // Inform UI to prompt user to verify their email.
+          emit(AuthError(
+            'Account created. A verification link was sent to ${event.email}. Please verify before signing in.',
+          ));
+          // Keep the user as unauthenticated (they must verify first)
+          emit(AuthUnauthenticated());
         } else {
           emit(AuthError('Sign Up failed'));
         }

@@ -1,5 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
+// lib/data/models/user_model.dart
 class UserModel {
   final String id;
   final String email;
@@ -18,16 +17,16 @@ class UserModel {
       'id': id,
       'email': email,
       'displayName': displayName,
-      'createdAt': Timestamp.fromDate(createdAt),
+      'createdAt': createdAt.toIso8601String(),
     };
   }
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      id: map['id'] ?? '',
-      email: map['email'] ?? '',
-      displayName: map['displayName'] ?? '',
-      createdAt: (map['createdAt'] as Timestamp).toDate(),
+      id: map['id'] as String,
+      email: map['email'] as String,
+      displayName: map['displayName'] as String,
+      createdAt: DateTime.parse(map['createdAt'] as String),
     );
   }
 }

@@ -29,6 +29,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
     // Send message
     on<ChatSendMessage>((event, emit) async {
+      final currentState = state;
+      if (currentState is ChatMessagesLoaded) {
+        // Append message locally
+        emit(ChatMessagesLoaded([...currentState.messages, event.message]));
+      }
+
       try {
         await chatRepository.sendMessage(event.message);
       } catch (e) {

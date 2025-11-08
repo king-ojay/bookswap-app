@@ -1,3 +1,4 @@
+// lib/presentation/screens/auth/login_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../logic/blocs/auth_bloc.dart';
@@ -41,9 +42,38 @@ class _LoginScreenState extends State<LoginScreen> {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthError) {
+            final msg = state.message;
+            // If message requests verification, show action
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
+              SnackBar(
+                content: Text(msg),
+                duration: const Duration(seconds: 4),
+                action: msg.toLowerCase().contains('verify')
+                    ? SnackBarAction(
+                        label: 'Resend',
+                        onPressed: () async {
+                          try {
+                            await context
+                                .read<AuthBloc>()
+                                .authRepository
+                                .resendVerificationEmail();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Verification email resent')),
+                            );
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Failed to resend: $e')),
+                            );
+                          }
+                        },
+                      )
+                    : null,
+              ),
             );
+          }
+          if (state is AuthAuthenticated) {
+            // navigate to home (your app handles this in main.dart via BlocBuilder)
           }
         },
         child: SafeArea(
@@ -66,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 8),
                     const Text(
-                      'Exchange textbooks with students',
+                      'by Ojay',
                       style: TextStyle(color: Colors.grey),
                     ),
                     const SizedBox(height: 48),
