@@ -8,6 +8,7 @@ import 'data/repositories/chat_repository.dart';
 import 'logic/blocs/auth_bloc.dart';
 import 'logic/blocs/auth_state.dart';
 import 'logic/blocs/book_bloc.dart';
+import 'logic/blocs/auth_event.dart';
 import 'logic/blocs/swap_bloc.dart';
 import 'logic/blocs/chat_bloc.dart';
 import 'presentation/screens/auth/login_screen.dart';

@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/repositories/auth_repository.dart';
+import 'auth_event.dart';
 import 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
@@ -21,7 +22,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     });
 
-    // Sign up
+    // Sign Up
     on<AuthSignUpRequested>((event, emit) async {
       emit(AuthLoading());
       try {
@@ -32,13 +33,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         );
         if (user != null) {
           emit(AuthAuthenticated(user));
+        } else {
+          emit(AuthError('Sign Up failed'));
         }
       } catch (e) {
         emit(AuthError(e.toString()));
       }
     });
 
-    // Sign in
+    // Sign In
     on<AuthSignInRequested>((event, emit) async {
       emit(AuthLoading());
       try {
@@ -56,7 +59,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     });
 
-    // Sign out
+    // Sign Out
     on<AuthSignOutRequested>((event, emit) async {
       await authRepository.signOut();
       emit(AuthUnauthenticated());
