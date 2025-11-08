@@ -57,8 +57,8 @@ class _AddBookScreenState extends State<AddBookScreen> {
         );
 
         context.read<BookBloc>().add(
-          BookAdd(book: book, imageFile: _imageFile),
-        );
+              BookAdd(book: book, imageFile: _imageFile),
+            );
       }
     }
   }
@@ -143,7 +143,7 @@ class _AddBookScreenState extends State<AddBookScreen> {
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<BookCondition>(
-                  value: _selectedCondition,
+                  initialValue: _selectedCondition,
                   decoration: const InputDecoration(
                     labelText: 'Condition',
                     border: OutlineInputBorder(),

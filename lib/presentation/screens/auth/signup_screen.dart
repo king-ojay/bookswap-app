@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../logic/blocs/auth_bloc.dart';
-import '../../../logic/blocs/auth_event.dart';
 import '../../../logic/blocs/auth_state.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -28,12 +27,12 @@ class _SignupScreenState extends State<SignupScreen> {
   void _signUp() {
     if (_formKey.currentState!.validate()) {
       context.read<AuthBloc>().add(
-        AuthSignUpRequested(
-          email: _emailController.text.trim(),
-          password: _passwordController.text,
-          displayName: _nameController.text.trim(),
-        ),
-      );
+            AuthSignUpRequested(
+              email: _emailController.text.trim(),
+              password: _passwordController.text,
+              displayName: _nameController.text.trim(),
+            ),
+          );
     }
   }
 

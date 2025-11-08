@@ -8,7 +8,6 @@ import '../../../logic/blocs/book_state.dart';
 import '../../../logic/blocs/swap_bloc.dart';
 import '../../../logic/blocs/swap_event.dart';
 import '../../../logic/blocs/swap_state.dart';
-import '../../../data/models/book_model.dart';
 import '../../../data/models/swap_model.dart';
 import '../../widgets/book_card.dart';
 import 'add_book_screen.dart';
@@ -63,8 +62,8 @@ class _MyListingsScreenState extends State<MyListingsScreen> {
 
   void _updateSwapStatus(String swapId, String bookId, SwapStatus status) {
     context.read<SwapBloc>().add(
-      SwapUpdateStatus(swapId: swapId, bookId: bookId, status: status),
-    );
+          SwapUpdateStatus(swapId: swapId, bookId: bookId, status: status),
+        );
   }
 
   @override
@@ -259,8 +258,8 @@ class _MyListingsScreenState extends State<MyListingsScreen> {
                               color: swap.status == SwapStatus.pending
                                   ? Colors.orange
                                   : swap.status == SwapStatus.accepted
-                                  ? Colors.green
-                                  : Colors.red,
+                                      ? Colors.green
+                                      : Colors.red,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(

@@ -59,8 +59,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
       );
 
       context.read<BookBloc>().add(
-        BookUpdate(book: updatedBook, imageFile: _newImageFile),
-      );
+            BookUpdate(book: updatedBook, imageFile: _newImageFile),
+          );
     }
   }
 
@@ -104,30 +104,30 @@ class _EditBookScreenState extends State<EditBookScreen> {
                             ),
                           )
                         : widget.book.imageUrl.isNotEmpty
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: CachedNetworkImage(
-                              imageUrl: widget.book.imageUrl,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => const Center(
-                                child: CircularProgressIndicator(),
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: CachedNetworkImage(
+                                  imageUrl: widget.book.imageUrl,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                ),
+                              )
+                            : const Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.add_photo_alternate,
+                                    size: 48,
+                                    color: Colors.grey,
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text('Tap to change book cover'),
+                                ],
                               ),
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
-                            ),
-                          )
-                        : const Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.add_photo_alternate,
-                                size: 48,
-                                color: Colors.grey,
-                              ),
-                              SizedBox(height: 8),
-                              Text('Tap to change book cover'),
-                            ],
-                          ),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -160,7 +160,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<BookCondition>(
-                  value: _selectedCondition,
+                  initialValue: _selectedCondition,
                   decoration: const InputDecoration(
                     labelText: 'Condition',
                     border: OutlineInputBorder(),

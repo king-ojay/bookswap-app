@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../logic/blocs/auth_bloc.dart';
-import '../../../logic/blocs/auth_event.dart'; // Ensure this file contains the definition of AuthSignInRequested
+// Ensure this file contains the definition of AuthSignInRequested
 import '../../../logic/blocs/auth_state.dart';
 import 'signup_screen.dart';
 

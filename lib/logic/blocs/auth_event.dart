@@ -1,48 +1,35 @@
-import 'dart:io';
 import 'package:equatable/equatable.dart';
-import '../../data/models/book_model.dart';
 
-abstract class BookEvent extends Equatable {
+abstract class AuthEvent extends Equatable {
   @override
   List<Object?> get props => [];
 }
 
-class BookLoadAll extends BookEvent {}
+class AuthCheckRequested extends AuthEvent {}
 
-class BookLoadMyBooks extends BookEvent {
-  final String userId;
+class AuthSignUpRequested extends AuthEvent {
+  final String email;
+  final String password;
+  final String displayName;
 
-  BookLoadMyBooks(this.userId);
-
-  @override
-  List<Object?> get props => [userId];
-}
-
-class BookAdd extends BookEvent {
-  final BookModel book;
-  final File? imageFile;
-
-  BookAdd({required this.book, this.imageFile});
+  AuthSignUpRequested({
+    required this.email,
+    required this.password,
+    required this.displayName,
+  });
 
   @override
-  List<Object?> get props => [book, imageFile];
+  List<Object?> get props => [email, password, displayName];
 }
 
-class BookUpdate extends BookEvent {
-  final BookModel book;
-  final File? imageFile;
+class AuthSignInRequested extends AuthEvent {
+  final String email;
+  final String password;
 
-  BookUpdate({required this.book, this.imageFile});
+  AuthSignInRequested({required this.email, required this.password});
 
   @override
-  List<Object?> get props => [book, imageFile];
+  List<Object?> get props => [email, password];
 }
 
-class BookDelete extends BookEvent {
-  final String bookId;
-
-  BookDelete(this.bookId);
-
-  @override
-  List<Object?> get props => [bookId];
-}
+class AuthSignOutRequested extends AuthEvent {}
