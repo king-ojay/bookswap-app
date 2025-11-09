@@ -21,7 +21,7 @@ class SwapBloc extends Bloc<SwapEvent, SwapState> {
     on<SwapLoadReceived>((event, emit) async {
       emit(SwapLoading());
       await emit.forEach(
-        swapRepository.getSwapsReceived(event.userId), // ✅ fixed name
+        swapRepository.getSwapsReceived(event.userId),
         onData: (swaps) => SwapLoaded(swaps),
         onError: (error, stackTrace) => SwapError(error.toString()),
       );
@@ -30,10 +30,11 @@ class SwapBloc extends Bloc<SwapEvent, SwapState> {
     // Create swap
     on<SwapCreate>((event, emit) async {
       try {
+        // Ensure the repository has this method
         await swapRepository.createSwap(event.swap);
         emit(SwapSuccess('Swap offer sent successfully'));
       } catch (e) {
-        emit(SwapError(e.toString()));
+        emit(SwapError('Failed to create swap: $e'));
       }
     });
 
@@ -47,7 +48,7 @@ class SwapBloc extends Bloc<SwapEvent, SwapState> {
         );
         emit(SwapSuccess('Swap status updated'));
       } catch (e) {
-        emit(SwapError(e.toString()));
+        emit(SwapError('Failed to update swap: $e'));
       }
     });
 
@@ -57,7 +58,7 @@ class SwapBloc extends Bloc<SwapEvent, SwapState> {
         await swapRepository.deleteSwap(event.swapId, event.bookId);
         emit(SwapSuccess('Swap cancelled'));
       } catch (e) {
-        emit(SwapError(e.toString()));
+        emit(SwapError('Failed to cancel swap: $e'));
       }
     });
   }

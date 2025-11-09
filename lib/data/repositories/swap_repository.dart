@@ -34,7 +34,7 @@ class SwapRepository {
         );
   }
 
-  // ✅ Fixed: Get swaps received by user (correct name)
+  // Get swaps received by user
   Stream<List<SwapModel>> getSwapsReceived(String userId) {
     return _firestore
         .collection('swaps')
