@@ -13,6 +13,7 @@ import 'logic/blocs/swap_bloc.dart';
 import 'logic/blocs/chat_bloc.dart';
 import 'presentation/screens/auth/login_screen.dart';
 import 'presentation/screens/home_screen.dart';
+import 'presentation/screens/swaps/swap_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,6 +57,9 @@ class MyApp extends StatelessWidget {
           title: 'BookSwap',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+          routes: {
+            '/swaps': (context) => const SwapScreen(),
+          },
           home: BlocBuilder<AuthBloc, AuthState>(
             builder: (context, state) {
               if (state is AuthAuthenticated) {

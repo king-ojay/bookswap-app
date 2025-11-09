@@ -34,7 +34,7 @@ class SwapRepository {
         );
   }
 
-  // Get swaps received by user
+  // ✅ Fixed: Get swaps received by user (correct name)
   Stream<List<SwapModel>> getSwapsReceived(String userId) {
     return _firestore
         .collection('swaps')
@@ -60,7 +60,7 @@ class SwapRepository {
         'status': status.name,
       });
 
-      // Update book status
+      // Update book status based on swap result
       BookStatus bookStatus;
       if (status == SwapStatus.accepted) {
         bookStatus = BookStatus.swapped;

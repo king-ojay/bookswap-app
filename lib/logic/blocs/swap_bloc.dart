@@ -21,7 +21,7 @@ class SwapBloc extends Bloc<SwapEvent, SwapState> {
     on<SwapLoadReceived>((event, emit) async {
       emit(SwapLoading());
       await emit.forEach(
-        swapRepository.getSwapsReceived(event.userId),
+        swapRepository.getSwapsReceived(event.userId), // ✅ fixed name
         onData: (swaps) => SwapLoaded(swaps),
         onError: (error, stackTrace) => SwapError(error.toString()),
       );
