@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'book_model.dart';
 
 enum SwapStatus { pending, accepted, rejected }
 
@@ -53,30 +54,6 @@ class SwapModel {
         orElse: () => SwapStatus.pending,
       ),
       createdAt: (map['createdAt'] as Timestamp).toDate(),
-    );
-  }
-
-  SwapModel copyWith({
-    String? id,
-    String? bookId,
-    String? bookTitle,
-    String? senderId,
-    String? senderName,
-    String? recipientId,
-    String? recipientName,
-    SwapStatus? status,
-    DateTime? createdAt,
-  }) {
-    return SwapModel(
-      id: id ?? this.id,
-      bookId: bookId ?? this.bookId,
-      bookTitle: bookTitle ?? this.bookTitle,
-      senderId: senderId ?? this.senderId,
-      senderName: senderName ?? this.senderName,
-      recipientId: recipientId ?? this.recipientId,
-      recipientName: recipientName ?? this.recipientName,
-      status: status ?? this.status,
-      createdAt: createdAt ?? this.createdAt,
     );
   }
 }

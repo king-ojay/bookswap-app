@@ -25,7 +25,6 @@ class _SwapScreenState extends State<SwapScreen>
 
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
-      // Load both sent and received swaps
       context.read<SwapBloc>().add(SwapLoadSent(authState.user.id));
       context.read<SwapBloc>().add(SwapLoadReceived(authState.user.id));
     }
@@ -112,7 +111,6 @@ class _SwapScreenState extends State<SwapScreen>
       body: TabBarView(
         controller: _tabController,
         children: [
-          // Sent swaps
           BlocBuilder<SwapBloc, SwapState>(
             builder: (context, state) {
               if (state is SwapLoading) {
@@ -134,7 +132,6 @@ class _SwapScreenState extends State<SwapScreen>
               return const SizedBox();
             },
           ),
-          // Received swaps
           BlocBuilder<SwapBloc, SwapState>(
             builder: (context, state) {
               if (state is SwapLoading) {
